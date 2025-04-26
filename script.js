@@ -3,6 +3,8 @@ let pendingClicks = 0;
 let isUpdating = false;
 let estimatedGlobalClicks = 0;
 const BATCH_SIZE = 10; // Number of clicks to batch before sending to server
+const ephemeralURL =
+  "https://spotty-mails-wave.loca.lt";
 
 function showResetMessage() {
   const message = document.createElement("div");
@@ -29,7 +31,7 @@ async function handleClick() {
   pendingClicks++;
   estimatedGlobalClicks++;
   updateLocalUI();
-  
+
   // Check for reset chance on each click
   if (Math.floor(Math.random() * 100) === 0) {
     console.log("Reset triggered!");
@@ -46,15 +48,17 @@ async function handleClick() {
 document.getElementById("body").onload = async () => {
   // Get initial global count
   try {
-    const response = await fetch("http://localhost:3030/get-clicks", {
+    const response = await fetch(`${ephemeralURL}/get-clicks`, {
       method: "GET",
       headers: {
         Accept: "application/json",
       },
     });
+
     if (response.ok) {
       const data = await response.json();
       estimatedGlobalClicks = data.global_clicks;
+      updateLocalUI();
     }
   } catch (error) {
     console.error("Error fetching initial global clicks:", error);
@@ -73,7 +77,7 @@ window.addEventListener("beforeunload", async (event) => {
     event.preventDefault();
 
     try {
-      const response = await fetch("https://hagfish-sure-manually.ngrok-free.app/update-clicks", {
+      const response = await fetch(`${ephemeralURL}/update-clicks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -110,7 +114,7 @@ async function updateServerClicks(isReset) {
 
   try {
     console.log("Sending to server:", { isReset, clicksToSend });
-    const response = await fetch("https://hagfish-sure-manually.ngrok-free.app/update-clicks", {
+    const response = await fetch(`${ephemeralURL}/update-clicks`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -136,3 +140,38 @@ async function updateServerClicks(isReset) {
     isUpdating = false;
   }
 }
+
+let backoffDelay = 5000;  // Start with 5 seconds
+let maxDelay = 30000;     // Max delay of 30 seconds
+let failureCount = 0;
+
+const pollServer = async () => {
+    try {
+        const response = await fetch(`${ephemeralURL}/get-clicks`, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            estimatedGlobalClicks = data.global_clicks;
+            updateLocalUI();
+            // Reset backoff on success
+            backoffDelay = 5000;
+            failureCount = 0;
+        } else {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Polling error:", error.message);
+        failureCount++;
+        // Exponential backoff with max delay
+        backoffDelay = Math.min(backoffDelay * 1.5, maxDelay);
+    } finally {
+        setTimeout(pollServer, backoffDelay);
+    }
+};
+
+pollServer();
