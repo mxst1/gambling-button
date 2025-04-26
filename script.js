@@ -4,7 +4,7 @@ let isUpdating = false;
 let estimatedGlobalClicks = 0;
 const BATCH_SIZE = 10; // Number of clicks to batch before sending to server
 const ephemeralURL =
-  "https://spotty-mails-wave.loca.lt";
+  "https://grumpy-donkeys-fetch.loca.lt";
 
 function showResetMessage() {
   const message = document.createElement("div");
