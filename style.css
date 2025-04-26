@@ -45,9 +45,86 @@ body {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  border: 10px solid #757575;
+}
+
+/* Base screw style */
+.screw {
+  width: 24px;
+  height: 24px;
+  background: linear-gradient(145deg, #dcdcdc, #a8a8a8);
+  border-radius: 50%;
+  box-shadow: inset -2px -2px 4px rgba(255, 255, 255, 0.5),
+    inset 2px 2px 4px rgba(0, 0, 0, 0.2), 0 1px 2px rgba(0, 0, 0, 0.15);
+  position: absolute;
+}
+
+/* Cross-style head */
+.screw::before,
+.screw::after {
+  content: "";
+  position: absolute;
+  background: #444;
+  border-radius: 1px;
+}
+
+.screw::before {
+  top: 50%;
+  left: 20%;
+  width: 60%;
+  height: 3px;
+  transform: translateY(-50%);
+}
+
+.screw::after {
+  left: 50%;
+  top: 20%;
+  width: 3px;
+  height: 60%;
+  transform: translateX(-50%);
+}
+
+/* Corner positions */
+.screw-top-left {
+  top: 5px;
+  left: 5px;
+}
+
+.screw-top-right {
+  top: 5px;
+  right: 5px;
+}
+
+.screw-bottom-left {
+  bottom: 5px;
+  left: 5px;
+}
+
+.screw-bottom-left:hover {
+  transform: rotate(360deg);
+  transition: transform 0.4s ease-in-out;
+  animation: spin 1s linear infinite;
+}
+
+.screw-bottom-right {
+  bottom: 5px;
+  right: 5px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeOut {
-    from { opacity: 1; }
-    to { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
 }
