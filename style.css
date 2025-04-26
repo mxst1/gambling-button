@@ -1,0 +1,53 @@
+body {
+  background-color: #2b272b;
+  font-family: "Poppins", sans-serif;
+  color: #dcdcdc;
+}
+
+#amt-clicked {
+  position: absolute;
+  top: 13%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+#click {
+  background-color: #cc313d;
+  border: none;
+  border-top: 10px solid #9d232d;
+  border-bottom: 10px solid #9d232d;
+  border-right: 10px solid #9d232d;
+  border-left: 10px solid #9d232d;
+  height: 300px;
+  width: 300px;
+  border-radius: 100%;
+  position: relative;
+  top: 50%;
+  left: 37%;
+  transform: translate(-50%, -50%);
+}
+
+#click:hover {
+  background-color: #b22935;
+  cursor: pointer;
+}
+
+#click:active {
+  background-color: #9d232d;
+}
+
+.container {
+  background-color: #9f9f9f;
+  height: 400px;
+  width: 400px;
+  border-radius: 10px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
